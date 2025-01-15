@@ -1,0 +1,34 @@
+version: '3.9'
+
+services:
+  desktop:
+    build:
+      context: ../build
+      dockerfile: Dockerfile
+      args:
+        - ROOT_IMAGE=ubuntu:24.04
+    environment:
+      - USER_GROUP=ds 
+      - USER_GID=1000
+      - USER_USER=ds 
+      - USER_UID=1000
+      - GRANT_SUDO=yes
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - CUDA_VISIBLE_DEVICES=0,1
+    init: true
+    restart: unless-stopped
+    shm_size: '4294967296'
+    ipc: host
+    ulimits:
+      memlock: -1 
+    hostname: DataScience
+    mac_address: "02:42:da:ce:2f:f3"
+    cap_add:
+      - SYS_PTRACE
+      - SYS_ADMIN
+    user: root
+    ports:
+      - "40022:8022"
+      - "40059:5901"
+      - "40088:8888"
+      - "40080:8000"

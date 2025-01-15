@@ -1,0 +1,70 @@
+name: Docker nightly
+
+on:
+  push:
+    branches:
+      - main
+    tags-ignore:
+      - '*'
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: build and test images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: install test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl perl netcat-traditional libtest-simple-perl libyaml-perl
+      - name: run generate
+        run: make generate
+      - name: run test
+        run: make test
+      - name: run clean
+        run: make clean
+
+  push_to_registries:
+    name: Push Docker image to github
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        root-image:
+          - name: ubuntu:24.04
+            alias: ubuntu 
+          - name: nvcr.io/nvidia/pytorch:24.12-py3
+            alias: nvidia-pytorch
+        target:
+          - minimal
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+      - name: Generate Context
+        run: |
+          make generate
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to GitHub Docker Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.PTA }}
+      - name: Build/Push to github.com
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          context: build/
+          file: build/Dockerfile
+          build-args: |
+            ROOT_IMAGE=${{ matrix.root-image.name }}
+          tags: ghcr.io/${{ github.repository_owner }}/${{ github.repository }}/${{ matrix.root-image.alias }}:${{ matrix.target }}-nightly
+          platforms: linux/amd64,linux/arm64
