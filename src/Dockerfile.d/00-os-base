@@ -1,0 +1,33 @@
+ARG ROOT_IMAGE=nvcr.io/nvidia/pytorch:24.12-py3
+
+FROM $ROOT_IMAGE AS base
+
+
+ARG USER_GROUP=jovyan
+ARG USER_GID=1000
+ARG USER_NAME=jovyan
+ARG USER_UID=1000
+
+# Configure environment
+ENV SHELL=/bin/bash \
+    NB_USER="${USER_NAME:-ds}" \
+    NB_UID=${USER_UID:-1000} \
+    NB_GID=${USER_GID:-1000} \
+    NB_GROUP=${USER_GROUP:-ds} \
+    LC_ALL=C.UTF-8 \
+    LANG=C.UTF-8 \
+    LANGUAGE=C.UTF-8
+
+ADD root/ /
+RUN bash -c ". /opt/setup-scripts/00-shell-utilities.sh; do_unminimize; do_upgrade; install_must_have"
+
+# Delete existing user with UID="${NB_UID}" if it exists
+# And Recreate the user with specified user UID/GID
+RUN if grep -q "${USER_UID}" /etc/passwd; then \
+        userdel --remove $(id -un "${USER_UID}"); \
+    fi && \
+    echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
+    sed -i.bak -e 's/^%admin/#%admin/' /etc/sudoers && \
+    sed -i.bak -e 's/^%sudo/#%sudo/' /etc/sudoers && \
+    useradd --no-log-init --create-home --shell /bin/bash --uid "${USER_UID}" "${USER_NAME}" && \
+    chmod g+w /etc/passwd

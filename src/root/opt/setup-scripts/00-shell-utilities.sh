@@ -2,6 +2,8 @@
 
 test -z "$SHELL_UTITITES_SCRIPTS_INCLUDED" || return
 
+export DEBIAN_FRONTEND=noninteractive
+
 setup_time_logger() {
     echo "[$(date)]: $@"
 }
@@ -31,6 +33,35 @@ do_unminimize() {
     fi
     yes | unminimize
     rm -f /etc/dpkg/dpkg.cfg.d/excludes.dpkg-tmp
+
+    rm -rf /var/lib/apt/lists/*
+}
+
+do_upgrade() {
+    ensure_debian
+    ensure_root
+
+    # Install all OS dependencies for the Server that starts
+    # but lacks all features (e.g., download as all possible file formats)
+    apt-get update --yes 
+    # - `apt-get upgrade` is run to patch known vulnerabilities in system packages
+    #   as the Ubuntu base image is rebuilt too seldom sometimes (less than once a month)
+    apt-get upgrade --yes
+
+    rm -rf /var/lib/apt/lists/*
+}
+
+install_must_have() {
+    ensure_debian
+    ensure_root
+
+    apt update
+    apt install -y --no-install-recommends bzip2 wget curl ca-certificates locales sudo netbase
+    apt clean -y
+
+    echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
+    echo "C.UTF-8 UTF-8" >> /etc/locale.gen
+    locale-gen
 
     rm -rf /var/lib/apt/lists/*
 }

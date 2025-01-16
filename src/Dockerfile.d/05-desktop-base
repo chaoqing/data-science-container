@@ -1,0 +1,15 @@
+FROM {% BASE_IMAGE %} AS {% BASE_IMAGE %}-desktop
+ARG DESKTOP_TYPE=openbox
+
+ENV DISPLAY=:1 \
+    VNC_PORT=5901 \
+    NO_VNC_PORT=6901 \
+    STARTUPDIR=/tmp \
+    NO_VNC_HOME=/var/www/no_vnc \
+    VNC_COL_DEPTH=24 \
+    VNC_RESOLUTION=1280x1024 \
+    VNC_PW=vncpassword \
+    VNC_VIEW_ONLY=false
+EXPOSE $VNC_PORT $NO_VNC_PORT
+
+RUN bash -c ". /opt/setup-scripts/80-install-desktop.sh; install_novnc"

@@ -1,14 +1,26 @@
+.DEFAULT_GOAL := build
+
+#* Makefile debugging
+print-%: ; @$(warning $* is $($*) ($(value $*)) (from $(origin $*)))
+
+define message
+@echo -n "make[top]: "
+@echo $(1)
+endef
+
 build: generate
-	docker build --build-arg ROOT_IMAGE=ubuntu:24.04 -t data-science-container:nightly build/
+	docker build --build-arg ROOT_IMAGE=ubuntu:24.04 -t data-science-container:nightly --target final build/
 
 test:
-	echo "I will run test here!"
+	@echo "docker build --build-arg ROOT_IMAGE=ubuntu:24.04 -t data-science-container:debug --target debug build/"
+	@echo "docker run --rm -it --name test data-science-container:debug"
 
 clean: FORCE
 	rm -rf build
 
 generate: clean
-	rsync -av src/ build/
+	rsync -av src/root build/
+	python3 build.py src/ --desktop -o build/Dockerfile
 
 sync-third-party:
 	git submodule update
@@ -27,15 +39,16 @@ sync-third-party:
 	cp third_party/rstudio/scripts/install_geospatial.sh src/root/opt/setup-scripts/install-rstudio.d/90-install_geospatial.sh
 	cp third_party/rstudio/scripts/install_shiny_server.sh src/root/opt/setup-scripts/install-rstudio.d/95-install_shiny_server.sh
 
-	cp third_party/vnc/src/debian/install/tigervnc.sh src/root/opt/setup-scripts/82-install-vncserver.sh
-	cp third_party/vnc/src/common/install/firefox.sh src/root/opt/setup-scripts/85-install-firefox.sh
-	cp third_party/vnc/src/common/install/no_vnc.sh src/root/opt/setup-scripts/87-install-noVNC.sh
+	cp third_party/vnc/src/debian/install/tigervnc.sh src/root/opt/setup-scripts/install-desktop.d/10-install-vncserver.sh
+	cp third_party/vnc/src/common/install/firefox.sh src/root/opt/setup-scripts/install-desktop.d/50-install-firefox.sh
+	cp third_party/vnc/src/common/install/no_vnc.sh src/root/opt/setup-scripts/install-desktop.d/90-install-noVNC.sh
+	
 	cp third_party/rstudio/scripts/install_nvtop.sh src/root/opt/setup-scripts/95-install-nvtop.sh
 
-	cp third_party/jupyter/images/docker-stacks-foundation/fix-permissions src/root/usr/local/bin/
-	cp third_party/jupyter/images/docker-stacks-foundation/run-hooks.sh src/root/usr/local/bin/
-	cp third_party/jupyter/images/docker-stacks-foundation/start.sh src/root/usr/local/bin/
-	cp third_party/vnc/src/common/scripts/vnc_startup.sh src/root/usr/local/bin/
+	cp third_party/jupyter/images/docker-stacks-foundation/fix-permissions src/root/usr/local/bin/fix-permissions
+	cp third_party/jupyter/images/docker-stacks-foundation/run-hooks.sh src/root/usr/local/bin/run-hooks.sh
+	cp third_party/jupyter/images/docker-stacks-foundation/start.sh src/root/usr/local/bin/container_entrypoint.sh
+	cp third_party/vnc/src/common/scripts/vnc_startup.sh src/root/usr/local/bin/vnc_startup.sh
 
 	chmod +x src/root/opt/setup-scripts/*
 	chmod +x src/root/usr/local/bin/*

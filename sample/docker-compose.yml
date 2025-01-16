@@ -10,7 +10,7 @@ services:
     environment:
       - USER_GROUP=ds 
       - USER_GID=1000
-      - USER_USER=ds 
+      - USER_NAME=ds 
       - USER_UID=1000
       - GRANT_SUDO=yes
       - NVIDIA_DRIVER_CAPABILITIES=all
