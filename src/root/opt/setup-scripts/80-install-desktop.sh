@@ -14,7 +14,7 @@ rm -rf /var/lib/apt/lists/*
 
 install_openbox() {
 apt-get update
-apt-get install -y openbox xterm dbus-x11 libdbus-glib-1-2
+apt-get install -y openbox xterm thunar tint2 feh tilda dbus-x11 libdbus-glib-1-2
 apt-get purge -y pm-utils *screensaver*
 apt-get clean -y
 
@@ -22,7 +22,9 @@ rm -rf /var/lib/apt/lists/*
 }
 
 install_browser() {
-    . /opt/setup-scripts/install-desktop.d/50-install-firefox.sh
+if ! command -v firefox &> /dev/null; then
+    /opt/setup-scripts/install-desktop.d/50-install-firefox.sh
+fi
 }
 
 install_vncserver() {

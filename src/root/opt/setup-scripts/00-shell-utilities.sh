@@ -56,7 +56,7 @@ install_must_have() {
     ensure_root
 
     apt update
-    apt install -y --no-install-recommends bzip2 wget curl ca-certificates locales sudo netbase
+    apt install -y --no-install-recommends bzip2 bash-completion wget curl ca-certificates locales sudo netbase
     apt clean -y
 
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen

@@ -12,7 +12,7 @@ build: generate
 	docker build --build-arg ROOT_IMAGE=ubuntu:24.04 -t data-science-container:nightly --target final build/
 
 test:
-	@echo "docker build --build-arg ROOT_IMAGE=ubuntu:24.04 -t data-science-container:debug --target debug build/"
+	@echo "docker build --build-arg ROOT_IMAGE=ubuntu:24.04 -t data-science-container:debug --target debug --progress=plain build/"
 	@echo "docker run --rm -it --name test data-science-container:debug"
 
 clean: FORCE

@@ -57,8 +57,8 @@ cleanup () {
 trap cleanup SIGINT SIGTERM
 
 ## write correct window size to chrome properties
-$STARTUPDIR/chrome-init.sh
-source $HOME/.chromium-browser.init
+test ! -x $STARTUPDIR/chrome-init.sh || $STARTUPDIR/chrome-init.sh
+test ! -r $HOME/.chromium-browser.init || source $HOME/.chromium-browser.init
 
 ## resolve_vnc_connection
 VNC_IP=$(hostname -i)
@@ -105,8 +105,10 @@ fi
 if [[ $DEBUG == true ]]; then echo "$vnc_cmd"; fi
 $vnc_cmd > $STARTUPDIR/no_vnc_startup.log 2>&1
 
+if test -x $HOME/wm_startup.sh; then
 echo -e "start window manager\n..."
 $HOME/wm_startup.sh &> $STARTUPDIR/wm_startup.log
+fi
 
 ## log connect options
 echo -e "\n\n------------------ VNC environment started ------------------"
