@@ -38,13 +38,9 @@ jobs:
         root-image:
           - name: ubuntu:24.04
             alias: ubuntu 
-            platform: linux/amd64
-          - name: ubuntu:24.04
-            alias: ubuntu 
-            platform: linux/arm64
-          - name: nvcr.io/nvidia/pytorch:24.12-py3
-            alias: nvidia-pytorch
-            platform: linux/amd64
+        platform:
+          - linux/amd64
+          - linux/arm64
         target:
           - minimal
     steps:
@@ -72,4 +68,4 @@ jobs:
           build-args: |
             ROOT_IMAGE=${{ matrix.root-image.name }}
           tags: ghcr.io/${{ github.repository_owner }}/${{ github.repository }}/${{ matrix.root-image.alias }}:${{ matrix.target }}-nightly
-          platforms: ${{ matrix.root-image.platform }}
+          platforms: ${{ matrix.platform }}
