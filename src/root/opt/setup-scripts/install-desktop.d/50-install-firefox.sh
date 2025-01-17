@@ -30,6 +30,7 @@ function instFF() {
             echo "FF_URL: $FF_URL"
             wget -qO- $FF_URL | tar xvj --strip 1 -C $FF_INST/
             ln -s "$FF_INST/firefox" /usr/bin/firefox
+            command -v x-www-browser &> /dev/null || ln -s /usr/bin/firefox /usr/bin/x-www-browser
             disableUpdate $FF_INST
             exit $?
         fi
@@ -39,4 +40,3 @@ function instFF() {
 }
 
 instFF "$VERSION" '/usr/lib/firefox'
-

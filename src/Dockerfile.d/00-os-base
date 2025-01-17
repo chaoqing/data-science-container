@@ -2,6 +2,7 @@ ARG ROOT_IMAGE=nvcr.io/nvidia/pytorch:24.12-py3
 
 FROM $ROOT_IMAGE AS base
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ARG USER_GROUP=jovyan
 ARG USER_GID=1000

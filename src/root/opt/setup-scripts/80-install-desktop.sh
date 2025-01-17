@@ -22,9 +22,16 @@ rm -rf /var/lib/apt/lists/*
 }
 
 install_browser() {
-if ! command -v firefox &> /dev/null; then
-    /opt/setup-scripts/install-desktop.d/50-install-firefox.sh
-fi
+    if [ "${BROWSER_TYPE}" == "firefox" ]; then
+        if ! command -v firefox &> /dev/null; then
+            /opt/setup-scripts/install-desktop.d/50-install-firefox.sh
+        fi
+    else
+        if ! command -v google-chrome &> /dev/null; then
+            /opt/setup-scripts/install-desktop.d/40-install-chrome.sh
+        fi
+    fi
+
 }
 
 install_vncserver() {
@@ -37,10 +44,9 @@ install_vncserver() {
         exit 1
     fi
 
-    apt-get update
     . /opt/setup-scripts/install-desktop.d/10-install-vncserver.sh
+
     install_browser
-    apt-get clean -y
 }
 
 install_novnc() {
