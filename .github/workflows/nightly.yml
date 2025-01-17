@@ -35,20 +35,27 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        root-image:
-          - name: ubuntu:24.04
-            alias: ubuntu 
+        config:
+          - alias: xbuntu
+            base: ubuntu:24.04
+            desktop: xfce4 
+          - alias: obuntu
+            base: ubuntu:24.04
+            desktop: openbox 
+          - alias: console
+            base: ubuntu:24.04
+            desktop: none 
         platform:
           - linux/amd64
           - linux/arm64
-        target:
+        features:
           - minimal
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
       - name: Generate Context
         run: |
-          make generate
+          make generate GENERATE_OPTIONS="--desktop ${{ matrix.config.desktop }}"
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -66,6 +73,6 @@ jobs:
           context: build/
           file: build/Dockerfile
           build-args: |
-            ROOT_IMAGE=${{ matrix.root-image.name }}
-          tags: ghcr.io/${{ github.repository_owner }}/${{ github.repository }}/${{ matrix.root-image.alias }}:${{ matrix.target }}-nightly
+            ROOT_IMAGE=${{ matrix.config.base }}
+          tags: ghcr.io/${{ github.repository }}/${{ matrix.config.alias }}:${{ matrix.features }}-nightly
           platforms: ${{ matrix.platform }}

@@ -19,9 +19,6 @@ elif command -v startxfce4 &> /dev/null; then
     exec startxfce4 --replace
 fi
 
-if
-
-}
 EOF
 
 chmod +x ${XSTARTUP}

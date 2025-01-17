@@ -20,7 +20,7 @@ clean: FORCE
 
 generate: clean
 	rsync -av src/root build/
-	python3 build.py src/ --desktop -o build/Dockerfile
+	python3 build.py src/ $(GENERATE_OPTIONS) -o build/Dockerfile
 
 
 FORCE:
