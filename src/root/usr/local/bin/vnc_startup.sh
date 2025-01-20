@@ -63,26 +63,6 @@ test ! -r $HOME/.chromium-browser.init || source $HOME/.chromium-browser.init
 ## resolve_vnc_connection
 VNC_IP=$(hostname -i)
 
-## change vnc password
-echo -e "\n------------------ change VNC password  ------------------"
-# first entry is control, second is view (if only one is valid for both)
-mkdir -p "$HOME/.vnc"
-PASSWD_PATH="$HOME/.vnc/passwd"
-
-if [[ -f $PASSWD_PATH ]]; then
-    echo -e "\n---------  purging existing VNC password settings  ---------"
-    rm -f $PASSWD_PATH
-fi
-
-if [[ $VNC_VIEW_ONLY == "true" ]]; then
-    echo "start VNC server in VIEW ONLY mode!"
-    #create random pw to prevent access
-    echo $(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20) | vncpasswd -f > $PASSWD_PATH
-fi
-echo "$VNC_PW" | vncpasswd -f >> $PASSWD_PATH
-chmod 600 $PASSWD_PATH
-
-
 ## start vncserver and noVNC webclient
 echo -e "\n------------------ start noVNC  ----------------------------"
 if [[ $DEBUG == true ]]; then echo "$NO_VNC_HOME/utils/novnc_proxy --vnc localhost:$VNC_PORT --listen $NO_VNC_PORT"; fi

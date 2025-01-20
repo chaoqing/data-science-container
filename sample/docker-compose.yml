@@ -2,6 +2,8 @@ version: '3.9'
 
 services:
   desktop:
+    container_name: desktop4ds
+    image: ghcr.io/chaoqing/data-science-container/xbuntu:minimal-nightly
     build:
       context: ../build
       dockerfile: Dockerfile
@@ -9,9 +11,11 @@ services:
         - ROOT_IMAGE=ubuntu:24.04
     environment:
       - USER_GROUP=ds 
-      - USER_GID=1000
+      - USER_GID=1010
       - USER_NAME=ds 
-      - USER_UID=1000
+      - USER_UID=1010
+      - VNC_PW=dsguestds
+      - VNC_RESOLUTION=1920x1200
       - GRANT_SUDO=yes
       - NVIDIA_DRIVER_CAPABILITIES=all
       - CUDA_VISIBLE_DEVICES=0,1
@@ -23,6 +27,8 @@ services:
       memlock: -1 
     hostname: DataScience
     mac_address: "02:42:da:ce:2f:f3"
+    security_opt:
+      - seccomp:unconfined
     cap_add:
       - SYS_PTRACE
       - SYS_ADMIN
@@ -30,5 +36,19 @@ services:
     ports:
       - "40022:8022"
       - "40059:5901"
+      - "40069:6901"
       - "40088:8888"
       - "40080:8000"
+    command: vnc_startup.sh
+    volumes:
+      - /tmp/docker-tmp-ds:/tmp
+      - /tmp/nvidia-mps:/tmp/nvidia-mps
+      - /home/ds:/home/ds:rshared
+      - /opt/:/srv/:rshared    
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['0']
+              capabilities: [gpu]

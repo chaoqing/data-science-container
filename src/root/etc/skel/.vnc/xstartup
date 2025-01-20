@@ -1,0 +1,16 @@
+#!/bin/bash
+
+test ! -f $HOME/.Xresources || xrdb $HOME/.Xresources
+
+if command -v openbox-session &> /dev/null; then
+    exec openbox-session
+elif command -v startxfce4 &> /dev/null; then
+    exec startxfce4 --replace
+elif [ -x $HOME/.xinitrc ]; then
+    exec $HOME/.xinitrc
+elif [ -x /etc/X11/xinit/xinitrc ]; then
+    exec /etc/X11/xinit/xinitrc
+else
+    echo "Could not find a valid session to start."
+    exit 1
+fi

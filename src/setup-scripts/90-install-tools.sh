@@ -10,6 +10,7 @@ UTITILIES_BASE+=(zsh)
 UTITILIES_BASE+=(curl)
 UTITILIES_BASE+=(wget)
 UTITILIES_BASE+=(rsync)
+UTITILIES_BASE+=(ncdu)
 UTITILIES_BASE+=(git)
 UTITILIES_BASE+=(vim-nox)
 UTITILIES_BASE+=(htop)
@@ -23,6 +24,7 @@ UTITILIES_BASE+=(jq)
 UTITILIES_BASE+=(psmisc)
 UTITILIES_BASE+=(lsof)
 UTITILIES_BASE+=(ttf-wqy-zenhei)
+UTITILIES_BASE+=(openssh-server)
 
 UTITILIES_NETWORK=()
 UTITILIES_NETWORK+=(dnsutils)
@@ -54,6 +56,13 @@ done
 echo "${utitilies[@]}"
 }
 
+configure_ssh() {
+    test ! -f /etc/ssh/sshd_config || sudo sed -i 's/^#Port 22/Port 8022/' /etc/ssh/sshd_config
+    chmod 600 /etc/ssh/ssh_host_*key || true
+}
+
 install_useful_tools() {
     apt update && apt install -y $(create_utility_list "$@") && rm -rf /var/lib/apt/lists/*
+
+    configure_ssh
 }

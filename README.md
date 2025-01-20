@@ -1,6 +1,15 @@
 # Data Science Container
 Virtual machine like docker containers for data science
 
+## Usage
+
+```sh
+cd sample
+
+sudo mkdir -m 1777 /tmp/docker-tmp-ds
+docker compose up
+
+```
 
 ## Acknowledge
 

@@ -14,7 +14,7 @@ rm -rf /var/lib/apt/lists/*
 
 install_openbox() {
 apt-get update
-apt-get install -y openbox xterm thunar tint2 feh tilda dbus-x11 libdbus-glib-1-2
+apt-get install -y openbox xterm thunar tint2 feh tilda compton suckless-tools dbus-x11 libdbus-glib-1-2
 apt-get purge -y pm-utils *screensaver*
 apt-get clean -y
 
@@ -45,6 +45,21 @@ install_vncserver() {
     fi
 
     . /opt/setup-scripts/install-desktop.d/10-install-vncserver.sh
+
+    if [ ! -f /etc/skel/.vnc/passwd ]; then
+        mkdir -p /etc/skel/.vnc
+        # first entry is control, second is view (if only one is valid for both)
+        PASSWD_PATH="/etc/skel/.vnc/passwd"
+
+        if [ "${VNC_VIEW_ONLY:-false}" == "true" ]; then
+            echo "start VNC server in VIEW ONLY mode!"
+            #create random pw to prevent access
+            echo $(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20) | vncpasswd -f > $PASSWD_PATH
+        fi
+
+        echo "${VNC_PW:-vncpasswd}" | vncpasswd -f >> $PASSWD_PATH
+        chmod 600 /etc/skel/.vnc/passwd
+    fi
 
     install_browser
 }
