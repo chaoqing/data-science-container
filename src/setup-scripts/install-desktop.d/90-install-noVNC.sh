@@ -9,5 +9,5 @@ wget -qO- https://github.com/novnc/noVNC/archive/refs/tags/v1.3.0.tar.gz | tar x
 # use older version of websockify to prevent hanging connections on offline containers, see https://github.com/ConSol/docker-headless-vnc-container/issues/50
 wget -qO- https://github.com/novnc/websockify/archive/refs/tags/v0.10.0.tar.gz | tar xz --strip 1 -C $NO_VNC_HOME/utils/websockify
 #chmod +x -v $NO_VNC_HOME/utils/*.sh
-## create index.html to forward automatically to `vnc_lite.html`
-ln -s $NO_VNC_HOME/vnc_lite.html $NO_VNC_HOME/index.html
+## create index.html to forward automatically to `vnc.html`
+ln -s $NO_VNC_HOME/vnc.html $NO_VNC_HOME/index.html

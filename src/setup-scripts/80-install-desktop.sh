@@ -58,7 +58,6 @@ install_vncserver() {
         fi
 
         echo "${VNC_PW:-vncpasswd}" | vncpasswd -f >> $PASSWD_PATH
-        chmod 600 /etc/skel/.vnc/passwd
     fi
 
     install_browser

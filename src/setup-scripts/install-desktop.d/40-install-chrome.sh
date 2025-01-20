@@ -22,8 +22,12 @@ function instChrome_arm64() {
     mv $INST_DIR/chrome-linux/* "$INST_DIR"
     rmdir "$INST_DIR/chrome-linux/" 
     rm -f chrome.zip
-    test ! -f /usr/bin/google-chrome || ln -s "$INST_DIR/chrome-wrapper" /usr/bin/google-chrome
+    test -f /usr/bin/google-chrome || ln -s "$INST_DIR/chrome-wrapper" /usr/bin/google-chrome
     command -v x-www-browser &> /dev/null || ln -sf /usr/bin/google-chrome /usr/bin/x-www-browser
+
+    apt-get update
+    apt-get install -y libgbm1 libasound2t64
+    rm -rf /var/lib/apt/lists/*
 }
 
 

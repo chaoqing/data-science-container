@@ -63,6 +63,10 @@ test ! -r $HOME/.chromium-browser.init || source $HOME/.chromium-browser.init
 ## resolve_vnc_connection
 VNC_IP=$(hostname -i)
 
+PASSWD_PATH="$HOME/.vnc/passwd"
+test -f "${PASSWD_PATH}" || echo "${VNC_PW:-vncpasswd}" | vncpasswd -f >> $PASSWD_PATH
+chmod 600 "${PASSWD_PATH}"
+
 ## start vncserver and noVNC webclient
 echo -e "\n------------------ start noVNC  ----------------------------"
 if [[ $DEBUG == true ]]; then echo "$NO_VNC_HOME/utils/novnc_proxy --vnc localhost:$VNC_PORT --listen $NO_VNC_PORT"; fi
