@@ -9,13 +9,14 @@
 
 set -e
 
-CRAN=${1:-${CRAN:-"https://cran.r-project.org"}}
 PURGE_BUILDDEPS=${PURGE_BUILDDEPS:-"true"}
+R_HOME=${R_HOME:-"/usr/local/lib/R"}
 
 ARCH=$(uname -m)
 
 # shellcheck source=/dev/null
 source /etc/os-release
+CRAN=${1:-${CRAN:-"https://p3m.dev/cran/__linux__/${VERSION_CODENAME:-jammy}/latest"}}
 
 # a function to install apt packages only if they are not installed
 function apt_install() {
@@ -48,7 +49,18 @@ EOF
 ## https://github.com/rocker-org/rocker-versioned2/issues/390
 if ! dpkg -l | grep -q libopenblas-dev; then
     apt_install libopenblas-dev
-    update-alternatives --set "libblas.so.3-${ARCH}-linux-gnu" "/usr/lib/${ARCH}-linux-gnu/openblas-pthread/libblas.so.3"
+
+    ## Instead of update system level options, we fix the libblas.so and libblas.so.3 for R only
+    # update-alternatives --set "libblas.so.3-${ARCH}-linux-gnu" "/usr/lib/${ARCH}-linux-gnu/openblas-pthread/libblas.so.3"
+
+    update-alternatives --install $R_HOME/lib/libblas.so libblas.so-R /usr/lib/${ARCH}-linux-gnu/openblas-pthread/libblas.so 100
+    update-alternatives --install $R_HOME/lib/libblas.so.3 libblas.so.3-R /usr/lib/${ARCH}-linux-gnu/openblas-pthread/libblas.so.3 100
+    update-alternatives --install $R_HOME/lib/libopenblas.so libopenblas.so-R /usr/lib/${ARCH}-linux-gnu/openblas-pthread/libopenblas.so 100
+    update-alternatives --install $R_HOME/lib/libopenblas.so.0 libopenblas.so.0-R /usr/lib/${ARCH}-linux-gnu/openblas-pthread/libopenblas.so.0 100
+
+    ## One can using following command to switch different options
+    # update-alternatives --get-selections | grep blas
+    # update-alternatives --config libopenblas.so.0-R
 fi
 
 ## Install littler

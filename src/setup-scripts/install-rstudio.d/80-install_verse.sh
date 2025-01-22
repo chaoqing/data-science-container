@@ -82,10 +82,11 @@ if [[ ! -x "/usr/bin/latex" ]]; then
 fi
 
 ## Install texlive
-/rocker_scripts/install_texlive.sh
+test ! -f /rocker_scripts/install_texlive.sh || /rocker_scripts/install_texlive.sh
+test ! -f /opt/setup-scripts/install-rstudio.d/85-install_texlive.sh || /opt/setup-scripts/install-rstudio.d/85-install_texlive.sh
 
 install2.r --error --skipinstalled -n "$NCPUS" tinytex
-install2.r --error --skipmissing --deps TRUE --skipinstalled -n "$NCPUS" \
+install2while_missing.r --error --skipmissing --deps TRUE --skipinstalled -n "$NCPUS" \
     blogdown \
     bookdown \
     distill \

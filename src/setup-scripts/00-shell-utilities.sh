@@ -58,7 +58,7 @@ install_must_have() {
     ensure_root
 
     apt update
-    apt install -y --no-install-recommends bzip2 unzip python-is-python3 bash-completion wget curl coreutils procps apt-utils ca-certificates locales sudo netbase
+    apt install -y --no-install-recommends bzip2 unzip python-is-python3 python3-pip rsync bash-completion wget curl coreutils procps apt-utils ca-certificates locales sudo netbase
     apt clean -y
 
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen

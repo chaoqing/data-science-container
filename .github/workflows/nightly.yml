@@ -50,12 +50,13 @@ jobs:
           - linux/arm64
         features:
           - minimal
+          - full
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
       - name: Generate Context
         run: |
-          make generate GENERATE_OPTIONS="--desktop ${{ matrix.config.desktop }}"
+          make generate GENERATE_OPTIONS="--desktop ${{ matrix.config.desktop }}" FEATURES=${{ matrix.features }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx

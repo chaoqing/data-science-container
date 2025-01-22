@@ -2,29 +2,29 @@
 
 create_utility_list() {
 
-UTITILIES_BASE=()
-UTITILIES_BASE+=(man-db)
-UTITILIES_BASE+=(plocate)
-UTITILIES_BASE+=(command-not-found)
-UTITILIES_BASE+=(zsh)
-UTITILIES_BASE+=(curl)
-UTITILIES_BASE+=(wget)
-UTITILIES_BASE+=(rsync)
-UTITILIES_BASE+=(ncdu)
-UTITILIES_BASE+=(git)
-UTITILIES_BASE+=(vim-nox)
-UTITILIES_BASE+=(htop)
-UTITILIES_BASE+=(tmux)
-UTITILIES_BASE+=(screen)
-UTITILIES_BASE+=(tree)
-UTITILIES_BASE+=(unar)
-UTITILIES_BASE+=(unzip)
-UTITILIES_BASE+=(zip)
-UTITILIES_BASE+=(jq)
-UTITILIES_BASE+=(psmisc)
-UTITILIES_BASE+=(lsof)
-UTITILIES_BASE+=(ttf-wqy-zenhei)
-UTITILIES_BASE+=(openssh-server)
+UTITILIES_BASIC=()
+UTITILIES_BASIC+=(man-db)
+UTITILIES_BASIC+=(plocate)
+UTITILIES_BASIC+=(command-not-found)
+UTITILIES_BASIC+=(zsh)
+UTITILIES_BASIC+=(curl)
+UTITILIES_BASIC+=(wget)
+UTITILIES_BASIC+=(rsync)
+UTITILIES_BASIC+=(ncdu)
+UTITILIES_BASIC+=(git)
+UTITILIES_BASIC+=(vim-nox)
+UTITILIES_BASIC+=(htop)
+UTITILIES_BASIC+=(tmux)
+UTITILIES_BASIC+=(screen)
+UTITILIES_BASIC+=(tree)
+UTITILIES_BASIC+=(unar)
+UTITILIES_BASIC+=(unzip)
+UTITILIES_BASIC+=(zip)
+UTITILIES_BASIC+=(jq)
+UTITILIES_BASIC+=(psmisc)
+UTITILIES_BASIC+=(lsof)
+UTITILIES_BASIC+=(ttf-wqy-zenhei)
+UTITILIES_BASIC+=(openssh-server)
 
 UTITILIES_NETWORK=()
 UTITILIES_NETWORK+=(dnsutils)
@@ -36,17 +36,24 @@ UTITILIES_NETWORK+=(nmap)
 UTITILIES_NETWORK+=(telnet)
 UTITILIES_NETWORK+=(socat)
 UTITILIES_NETWORK+=(ncat)
+UTITILIES_NETWORK+=(w3m)
+
+UTITILIES_EXTRA=()
+UTITILIES_EXTRA+=(ocra) # For R plotly saving images
 
 IFS=' ' read -r -a utitilies <<< "${UTITILIES_EXTRA:-$@}"
-IFS=' ' read -r -a utitilies_group <<< "${UTITILIES_GROUP:-BASE}"
+IFS=' ' read -r -a utitilies_group <<< "${UTITILIES_GROUP:-BASIC}"
 
 for group in "${utitilies_group[@]}"; do
 case "${group}" in
-    BASE)
-        utitilies+=("${UTITILIES_BASE[@]}")
+    BASIC)
+        utitilies+=("${UTITILIES_BASIC[@]}")
         ;;
     NETWORK)
         utitilies+=("${UTITILIES_NETWORK[@]}")
+        ;;
+    EXTRA)
+        utitilies+=("${UTITILIES_EXTRA[@]}")
         ;;
     *)
         ;;

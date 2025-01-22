@@ -43,7 +43,7 @@ install2.r --error --skipinstalled -n "$NCPUS" \
     gert
 
 ## dplyr database backends
-install2.r --error --skipmissing --skipinstalled -n "$NCPUS" \
+install2while_missing.r --error --skipmissing --skipinstalled -n "$NCPUS" \
     arrow \
     dbplyr \
     DBI \
@@ -55,6 +55,12 @@ install2.r --error --skipmissing --skipinstalled -n "$NCPUS" \
     RPostgres \
     RSQLite \
     fst
+
+## extra packages
+install2while_missing.r --error --skipmissing --skipinstalled -n "$NCPUS" \
+    plotly \
+    reticulate \
+
 
 ## a bridge to far? -- brings in another 60 packages
 # install2.r --error --skipinstalled -n "$NCPUS" tidymodels

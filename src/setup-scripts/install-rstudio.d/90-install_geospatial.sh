@@ -43,7 +43,7 @@ apt_install \
     tk-dev \
     unixodbc-dev
 
-install2.r --error --skipmissing --skipinstalled -n "$NCPUS" \
+install2while_missing.r --error --skipmissing --skipinstalled -n "$NCPUS" \
     RColorBrewer \
     RandomFields \
     RNetCDF \
@@ -83,7 +83,8 @@ R -e "BiocManager::install('rhdf5')"
 ## reasons on earlier base images.
 source /etc/os-release
 if [ "${UBUNTU_CODENAME}" == "focal" ]; then
-    /rocker_scripts/install_wgrib2.sh
+    test ! -f /rocker_scripts/install_wgrib2.sh || /rocker_scripts/install_wgrib2.sh
+    test ! -f /opt/setup-scripts/install-rstudio.d/92-install_wgrib2.sh || /opt/setup-scripts/install-rstudio.d/92-install_wgrib2.sh
 fi
 
 # Clean up

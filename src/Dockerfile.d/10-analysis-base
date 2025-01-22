@@ -1,3 +1,30 @@
 FROM {% BASE_IMAGE %} AS {% BASE_IMAGE %}-analysis
-RUN bash -c ". /opt/setup-scripts/50-install-rstudio.sh"
-RUN bash -c ". /opt/setup-scripts/60-install-jupyter.sh"
+
+ARG R_VERSION=latest
+ARG RSTUDIO_VERSION=stable
+ARG SHINY_SERVER_VERSION=latest
+ARG CRAN=https://cran.r-project.org
+
+ENV DEFAULT_USER=${USER_NAME:-${NB_USER:-jovyan}}
+ENV PURGE_BUILDDEPS=false
+ENV TZ="Etc/UTC"
+ENV LANG=en_US.UTF-8
+ENV NVBLAS_CONFIG_FILE="/etc/nvblas.conf"
+
+RUN echo " ======= Compile R from source =======" && \
+    /opt/setup-scripts/install-rstudio.d/10-install_R_source.sh && \
+    /opt/setup-scripts/install-rstudio.d/20-setup_R.sh && \
+    /opt/setup-scripts/install-rstudio.d/30-config_R_cuda.sh
+
+RUN echo " ======= Installing Packages =======" && \
+    /opt/setup-scripts/install-rstudio.d/40-install_tidyverse.sh
+
+RUN echo " ======= Installing RStudio =======" && \
+    /opt/setup-scripts/install-rstudio.d/50-install_rstudio.sh && \
+    /opt/setup-scripts/install-rstudio.d/60-install_pandoc.sh && \
+    /opt/setup-scripts/install-rstudio.d/70-install_quarto.sh && \
+    /opt/setup-scripts/install-rstudio.d/80-install_verse.sh && \
+    /opt/setup-scripts/install-rstudio.d/90-install_geospatial.sh
+
+RUN echo " ======= Installing Shiny =======" && \
+    /opt/setup-scripts/install-rstudio.d/95-install_shiny_server.sh

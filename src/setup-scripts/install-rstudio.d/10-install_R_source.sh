@@ -136,7 +136,7 @@ R_PAPERSIZE=letter \
     --with-tcltk \
     --with-recommended-packages
 
-make
+make -j${NCPUS:-$(nproc)}
 make install
 make clean
 

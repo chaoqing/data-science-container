@@ -1,5 +1,9 @@
 .DEFAULT_GOAL := build
-GENERATE_OPTIONS ?= --desktop xfce4
+GENERATE_OPTIONS ?= --desktop xfce4 --analysis
+FEATURES_OPTIONS ?=
+ifeq ($(FEATURES),full)
+	FEATURES_OPTIONS += --analysis
+endif
 
 #* Makefile debugging
 print-%: ; @$(warning $* is $($*) ($(value $*)) (from $(origin $*)))
@@ -22,7 +26,7 @@ clean: FORCE
 generate: clean
 	rsync -av src/root build/
 	rsync -av src/setup-scripts build/
-	python3 build.py src/ $(GENERATE_OPTIONS) -o build/Dockerfile
+	python3 build.py src/ $(GENERATE_OPTIONS) $(FEATURES_OPTIONS) -o build/Dockerfile
 
 FORCE:
 

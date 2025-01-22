@@ -27,8 +27,8 @@ apt_install \
     wget
 
 # Run dependency scripts
-/rocker_scripts/install_s6init.sh
-/rocker_scripts/install_pandoc.sh
+test ! -f /rocker_scripts/install_s6init.sh || /rocker_scripts/install_s6init.sh
+test ! -f /rocker_scripts/install_pandoc.sh || /rocker_scripts/install_pandoc.sh
 
 # Install Shiny server
 
@@ -45,7 +45,7 @@ install2.r --error --skipinstalled -n "$NCPUS" shiny rmarkdown
 
 # Set up directories and permissions
 if [ -x "$(command -v rstudio-server)" ]; then
-    DEFAULT_USER=${DEFAULT_USER:-rstudio}
+    DEFAULT_USER=${DEFAULT_USER:-jovyan}
     adduser "${DEFAULT_USER}" shiny
 fi
 
@@ -68,7 +68,7 @@ EOF
 chmod +x /etc/services.d/shiny-server/run
 
 # install init script
-cp /rocker_scripts/init_set_env.sh /etc/cont-init.d/01_set_env
+# cp /rocker_scripts/init_set_env.sh /etc/cont-init.d/01_set_env
 
 # Clean up
 rm -rf /var/lib/apt/lists/*
