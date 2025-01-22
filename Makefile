@@ -26,7 +26,7 @@ sync-third-party:
 	git submodule update
 	mkdir -p src/Dockerfile.d/
 
-	cp third_party/jupyter/images/docker-stacks-foundation/Dockerfile src/Dockerfile.d/10-jupyter-base
+	bash -c "cat third_party/jupyter/images/{docker-stacks-foundation,base-notebook,minimal-notebook,scipy-notebook,datascience-notebook}/Dockerfile" > src/Dockerfile.d/10-jupyter-base
 	cp third_party/rstudio/dockerfiles/ml-verse_4.3.3.Dockerfile src/Dockerfile.d/20-rstudio-base
 
 	mkdir -p src/setup-scripts/install-rstudio.d/
@@ -46,8 +46,8 @@ sync-third-party:
 	mkdir -p src/root/etc/skel/.rstudio
 
 	mkdir -p src/root/usr/local/bin/start-notebook.d/
-	cp third_party/rstudio/scripts/init_set_env.sh src/root/usr/local/bin/start-notebook.d/.30-rstudio-set-envs.sh
-	cp third_party/rstudio/scripts/init_userconf.sh src/root/usr/local/bin/start-notebook.d/.40-rstudio-userconf.sh
+	cp third_party/rstudio/scripts/init_set_env.sh src/root/usr/local/bin/start-notebook.d/30-rstudio-set-envs.sh
+	cp third_party/rstudio/scripts/init_userconf.sh src/root/usr/local/bin/start-notebook.d/40-rstudio-userconf.sh
 	cp third_party/rstudio/scripts/bin/install2.r src/root/usr/local/bin/install2while_missing.r
 
 	mkdir -p src/setup-scripts/install-desktop.d/
@@ -67,3 +67,4 @@ sync-third-party:
 	find src/root/usr/local/bin/ -type f -exec chmod +x {} \;
 
 FORCE:
+
