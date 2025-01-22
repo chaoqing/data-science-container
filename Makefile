@@ -24,5 +24,5 @@ generate: clean
 	rsync -av src/setup-scripts build/
 	python3 build.py src/ $(GENERATE_OPTIONS) -o build/Dockerfile
 
-
 FORCE:
+
