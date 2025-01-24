@@ -1,6 +1,6 @@
 #!/bin/bash
 
-test -z "$SHELL_UTITITES_SCRIPTS_INCLUDED" || return
+test -z "$SHELL_UTITITES_SCRIPTS_INCLUDED" || return 0
 
 set -e
 
@@ -25,7 +25,7 @@ ensure_root() {
 }
 
 do_unminimize() {
-    test ! -f /etc/update-motd.d/60-unminimize && return
+    test ! -f /etc/update-motd.d/60-unminimize && return 0
 
     ensure_debian
     ensure_root

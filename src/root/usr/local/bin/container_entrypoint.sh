@@ -3,7 +3,12 @@
 # Distributed under the terms of the Modified BSD License.
 
 if [ "${SKIP_ENTRYPOINT}" = TRUE ]; then
-    exec "$@"
+    export SKIP_ENTRYPOINT=
+    if [ $# -gt 0 ]; then
+        exec "$@"
+    else
+        exec bash
+    fi
 fi
 
 set -e

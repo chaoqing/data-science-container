@@ -1,12 +1,12 @@
 #!/bin/bash
 
 get_user_home() {
-    test -n "$1" || return
+    test -n "$1" || return 0
     getent passwd $1 | cut -d: -f6
 }
 
 sync_etc_skel() {
-    test -n "$1" || return
+    test -n "$1" || return 0
     USER=$1
     HOME=$(get_user_home ${USER}) 
 
@@ -15,7 +15,7 @@ sync_etc_skel() {
 }
 
 fix_home_permissions() {
-    test -n "$1" || return
+    test -n "$1" || return 0
     USER=$1
     HOME=$(get_user_home ${USER}) 
 
