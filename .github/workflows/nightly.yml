@@ -51,6 +51,9 @@ jobs:
         features:
           - minimal
           - full
+        exclude:
+          - platform: linux/arm64
+            features: full
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4

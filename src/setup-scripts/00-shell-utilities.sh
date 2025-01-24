@@ -77,4 +77,58 @@ for script in "$@"; do
 done
 }
 
+shell_type() {
+# Detect the shell from which the script was called
+parent=$(ps -o comm $PPID |tail -1)
+parent=${parent#-}  # remove the leading dash that login shells have
+case "$parent" in
+  bash|fish|xonsh|zsh)
+    shell=$parent
+    ;;
+  *)
+    # use the login shell (basename of $SHELL) as a fallback
+    shell=${SHELL##*/}
+    ;;
+esac
+echo $shell
+}
+
+is_interactive() {
+test -t 0
+}
+
+prompt_for_yes() {
+  echo "$@ (Y/N)?" >&2
+  read VAR
+
+  case "$VAR" in
+    y|Y|yes|Yes|YES)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+prompt_for_anwser() {
+  echo "$@" >&2
+  read VAR
+  echo $VAR
+}
+
+
+get_platform() {
+case "$(uname)" in
+  Linux)
+    PLATFORM="linux" ;;
+  Darwin)
+    PLATFORM="osx" ;;
+  *NT*)
+    PLATFORM="win" ;;
+esac
+echo $PLATFORM
+}
+
+
 SHELL_UTITITES_SCRIPTS_INCLUDED=1

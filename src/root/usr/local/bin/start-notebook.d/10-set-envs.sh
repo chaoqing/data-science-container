@@ -12,3 +12,5 @@ fi
 if test -n "$USER_UID"; then
     export NB_UID=${USER_UID}
 fi
+
+test ! -d /opt/hpcx/ucx/lib/ || export LD_LIBRARY_PATH=/opt/hpcx/ucx/lib/:$LD_LIBRARY_PATH

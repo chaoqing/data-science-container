@@ -28,3 +28,51 @@ RUN echo " ======= Installing RStudio =======" && \
 
 RUN echo " ======= Installing Shiny =======" && \
     /opt/setup-scripts/install-rstudio.d/95-install_shiny_server.sh
+
+
+
+ARG PYTHON_VERSION=default
+ENV CONDA_DIR=/opt/conda
+
+# Install all OS dependencies for a fully functional Server
+RUN apt-get update --yes && \
+    apt-get install --yes --no-install-recommends \
+    # Common useful utilities
+    curl \
+    git \
+    nano-tiny \
+    tzdata \
+    unzip \
+    vim-tiny \
+    # git-over-ssh
+    openssh-client \
+    # `less` is needed to run help in R
+    # see: https://github.com/jupyter/docker-stacks/issues/1588
+    less \
+    # `nbconvert` dependencies
+    # https://nbconvert.readthedocs.io/en/latest/install.html#installing-tex
+    texlive-xetex \
+    texlive-fonts-recommended \
+    texlive-plain-generic \
+    # Enable clipboard on Linux host systems
+    xclip \
+    # for cython: https://cython.readthedocs.io/en/latest/src/quickstart/install.html
+    build-essential \
+    # for latex labels
+    cm-super \
+    dvipng \
+    # for matplotlib anim
+    ffmpeg \
+    fonts-dejavu \
+    # - Add necessary fonts for matplotlib/seaborn
+    #   See https://github.com/jupyter/docker-stacks/pull/380 for details
+    fonts-liberation \
+    # - `pandoc` is used to convert notebooks to html files
+    #   it's not present in the aarch64 Ubuntu image, so we install it here
+    pandoc && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+ARG USE_CONDA_ENV=0
+ARG POETRY_VERSION=2.0.0
+RUN bash -c ". /opt/setup-scripts/60-install-jupyter.sh; install_python_analysis_tools"

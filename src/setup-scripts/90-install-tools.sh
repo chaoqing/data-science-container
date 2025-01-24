@@ -41,9 +41,9 @@ UTITILIES_NETWORK+=(w3m)
 UTITILIES_EXTRA=()
 UTITILIES_EXTRA+=(ocra) # For R plotly saving images
 
-IFS=' ' read -r -a utitilies <<< "${UTITILIES_EXTRA:-$@}"
-IFS=' ' read -r -a utitilies_group <<< "${UTITILIES_GROUP:-BASIC}"
+IFS=' ' read -r -a utitilies_group <<< "${@:-BASIC}"
 
+utitilies=()
 for group in "${utitilies_group[@]}"; do
 case "${group}" in
     BASIC)
@@ -56,6 +56,7 @@ case "${group}" in
         utitilies+=("${UTITILIES_EXTRA[@]}")
         ;;
     *)
+        utitilies+=("${group}")
         ;;
 esac
 done

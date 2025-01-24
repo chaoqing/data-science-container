@@ -2,6 +2,10 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
+if [ "${SKIP_ENTRYPOINT}" = TRUE ]; then
+    exec "$@"
+fi
+
 set -e
 
 # The _log function is used for everything this script wants to log.
