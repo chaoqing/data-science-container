@@ -10,8 +10,10 @@ sync_etc_skel() {
     USER=$1
     HOME=$(get_user_home ${USER}) 
 
-    test ! -f $HOME/.skip/skel || return 0
+    test ! -f $HOME/.skip.skel || return 0
     sudo -u ${USER} rsync -rlptDv --ignore-existing /etc/skel/ $HOME/
+
+    chmod 600 $HOME/.vnc/passwd || true
 }
 
 fix_home_permissions() {

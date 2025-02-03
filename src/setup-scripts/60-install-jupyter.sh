@@ -41,7 +41,7 @@ install_pyenv() {
 }
 
 install_poetry() {
-    POETRY_VERSION=${1:${POETRY_VERSION}}
+    POETRY_VERSION=${1:-${POETRY_VERSION}}
 
     if  [ -z "$POETRY_VERSION" ]; then
     curl -sSL https://install.python-poetry.org | POETRY_HOME=/opt/poetry_1.8 python3 - --version 1.8.4
@@ -143,6 +143,7 @@ PIP+=('ipympl')
 PIP+=('bottleneck') # python3-bottleneck may have conflict with pandas so upgrade it with pip
 
 EXTRA=()
+EXTRA+=('rainbow-api')
 
 IFS=' ' read -r -a packages_group <<< "${@:-COMMON}"
 
@@ -212,6 +213,9 @@ install_packages_with_system() {
     python3 -m pip install --no-cache-dir --break-system-packages --upgrade $(create_python_packages_list COMMON PIP "$@")
     PYTHON_RUN_PREFIX="python3 -m" install_jupyter_facets
     PYTHON_RUN_PREFIX="python3 -m" configure_python
+
+    # NVIDIA images have workspace here
+    test ! -d /workspace || rm -rf /workspace/
 }
 
 install_to_seperate_env() {

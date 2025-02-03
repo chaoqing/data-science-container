@@ -4,6 +4,7 @@ FEATURES_OPTIONS ?=
 ifeq ($(FEATURES),full)
 	FEATURES_OPTIONS += --analysis
 endif
+DOCKER ?= DOCKER_BUILDKIT=1 docker
 
 #* Makefile debugging
 print-%: ; @$(warning $* is $($*) ($(value $*)) (from $(origin $*)))
@@ -14,11 +15,11 @@ define message
 endef
 
 build: generate
-	docker build --build-arg ROOT_IMAGE=ubuntu:24.04 -t data-science-container --target final build/
+	$(DOCKER) build --build-arg ROOT_IMAGE=ubuntu:24.04 -t data-science-container --target final build/
 
 test:
-	@echo "docker build --build-arg ROOT_IMAGE=ubuntu:24.04 -t data-science-container:debug --target debug --progress=plain build/"
-	@echo "docker run --rm -it --name test -u 0 -e GRANT_SUDO=1 --security-opt seccomp=unconfined -p 6901:6901 data-science-container:debug vnc_startup.sh"
+	@echo "$(DOCKER) build --build-arg ROOT_IMAGE=ubuntu:24.04 -t data-science-container:debug --target debug --progress=plain build/"
+	@echo "$(DOCKER) run --rm -it --name test -u 0 -e GRANT_SUDO=1 --security-opt seccomp=unconfined -p 6901:6901 data-science-container:debug vnc_startup.sh"
 
 clean: FORCE
 	rm -rf build

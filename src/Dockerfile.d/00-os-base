@@ -19,8 +19,7 @@ ENV SHELL=/bin/bash \
     LANG=C.UTF-8 \
     LANGUAGE=C.UTF-8
 
-ADD root/ /
-COPY --chmod=755 setup-scripts /opt/setup-scripts
+COPY --chmod=755 setup-scripts/00-shell-utilities.sh /opt/setup-scripts/
 RUN bash -c ". /opt/setup-scripts/00-shell-utilities.sh; do_unminimize; do_upgrade; install_must_have"
 
 # Delete existing user with UID="${NB_UID}" if it exists

@@ -11,6 +11,10 @@ ENV TZ="Etc/UTC"
 ENV LANG=en_US.UTF-8
 ENV NVBLAS_CONFIG_FILE="/etc/nvblas.conf"
 
+COPY --chmod=755 setup-scripts/50-install-rstudio.sh /opt/setup-scripts/
+COPY --chmod=755 setup-scripts/install-rstudio.d /opt/setup-scripts/install-rstudio.d/
+COPY --chmod=755 root/usr/local/bin/install2while_missing.r /usr/local/bin/
+
 RUN echo " ======= Compile R from source =======" && \
     /opt/setup-scripts/install-rstudio.d/10-install_R_source.sh && \
     /opt/setup-scripts/install-rstudio.d/20-setup_R.sh && \
@@ -79,4 +83,6 @@ RUN apt-get update --yes && \
 
 ARG USE_CONDA_ENV=0
 ARG POETRY_VERSION=2.0.0
+COPY --chmod=755 setup-scripts/60-install-jupyter.sh /opt/setup-scripts/
+COPY --chmod=755 root/usr/local/bin/fix-permissions /usr/local/bin/
 RUN bash -c ". /opt/setup-scripts/60-install-jupyter.sh; install_python_analysis_tools"

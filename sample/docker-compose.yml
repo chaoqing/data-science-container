@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   desktop:
     container_name: desktop4ds
@@ -18,7 +16,11 @@ services:
       - VNC_RESOLUTION=1920x1200
       - GRANT_SUDO=yes
       - NVIDIA_DRIVER_CAPABILITIES=all
-      - CUDA_VISIBLE_DEVICES=0,1
+      - CUDA_VISIBLE_DEVICES=0
+      - ENABLE_RSTUDIO_SERVICE=1
+      - ENABLE_SSH_SERVICE=1
+      - ENABLE_JUPYTER_SERVICE=1
+      - ENABLE_SHINY_SERVICE=1
     init: true
     restart: unless-stopped
     shm_size: '4294967296'
@@ -46,7 +48,7 @@ services:
       - /tmp/docker-tmp-ds:/tmp
       - /tmp/nvidia-mps:/tmp/nvidia-mps
       - /home/ds:/home/ds:rshared
-      - /opt/:/srv/:rshared    
+      - /opt/:/srv/:rshared
     deploy:
       resources:
         reservations:

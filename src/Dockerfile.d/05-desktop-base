@@ -13,4 +13,6 @@ ENV DISPLAY=:1 \
     VNC_VIEW_ONLY=false
 EXPOSE $VNC_PORT $NO_VNC_PORT
 
+COPY --chmod=755 setup-scripts/80-install-desktop.sh /opt/setup-scripts/
+COPY --chmod=755 setup-scripts/install-desktop.d /opt/setup-scripts/install-desktop.d/
 RUN bash -c ". /opt/setup-scripts/80-install-desktop.sh; install_novnc"

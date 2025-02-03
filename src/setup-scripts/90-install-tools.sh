@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 create_utility_list() {
 
 UTITILIES_BASIC=()
@@ -23,6 +25,7 @@ UTITILIES_BASIC+=(zip)
 UTITILIES_BASIC+=(jq)
 UTITILIES_BASIC+=(psmisc)
 UTITILIES_BASIC+=(lsof)
+UTITILIES_BASIC+=(pipx)
 UTITILIES_BASIC+=(ttf-wqy-zenhei)
 UTITILIES_BASIC+=(openssh-server)
 UTITILIES_BASIC+=(doxygen)
@@ -49,7 +52,8 @@ UTITILIES_NETWORK+=(ncat)
 UTITILIES_NETWORK+=(w3m)
 
 UTITILIES_EXTRA=()
-UTITILIES_EXTRA+=(ocra) # For R plotly saving images
+UTITILIES_EXTRA+=(orca) # For R plotly saving images
+UTITILIES_EXTRA+=(graphviz)
 
 IFS=' ' read -r -a utitilies_group <<< "${@:-BASIC}"
 
