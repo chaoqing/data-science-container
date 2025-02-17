@@ -24,6 +24,7 @@ RUN echo " ======= Installing Packages =======" && \
     /opt/setup-scripts/install-rstudio.d/40-install_tidyverse.sh
 
 RUN echo " ======= Installing RStudio =======" && \
+    test $(uname -m) == "aarch64" || \
     /opt/setup-scripts/install-rstudio.d/50-install_rstudio.sh && \
     /opt/setup-scripts/install-rstudio.d/60-install_pandoc.sh && \
     /opt/setup-scripts/install-rstudio.d/70-install_quarto.sh && \
@@ -31,6 +32,7 @@ RUN echo " ======= Installing RStudio =======" && \
     /opt/setup-scripts/install-rstudio.d/90-install_geospatial.sh
 
 RUN echo " ======= Installing Shiny =======" && \
+    test $(uname -m) == "aarch64" || \
     /opt/setup-scripts/install-rstudio.d/95-install_shiny_server.sh
 
 

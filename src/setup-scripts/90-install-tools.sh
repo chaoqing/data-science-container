@@ -67,6 +67,7 @@ UTITILIES_EXTRA+=(clang-tools)
 UTITILIES_EXTRA+=(valgrind)
 UTITILIES_EXTRA+=(fonts-noto-cjk-extra)
 UTITILIES_EXTRA+=(webhttrack)
+UTITILIES_EXTRA+=(nginx)
 
 IFS=' ' read -r -a utitilies_group <<< "${@:-BASIC}"
 

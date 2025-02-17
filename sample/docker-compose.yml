@@ -1,26 +1,23 @@
 services:
   desktop:
     container_name: desktop4ds
-    image: ghcr.io/chaoqing/data-science-container/xbuntu:full-nightly
+    image: obuntu
     build:
-      context: ../build
+      context: ./container
       dockerfile: Dockerfile
       args:
-        - ROOT_IMAGE=ubuntu:24.04
+        - USER_NAME=ds
     environment:
       - USER_GROUP=ds 
       - USER_GID=1010
-      - USER_NAME=ds 
+      - USER_NAME=ds
       - USER_UID=1010
-      - USER_PASSWORD=dsguestds
+      - USER_PASSWORD=vncpassword
       - VNC_RESOLUTION=1920x1200
       - GRANT_SUDO=yes
       - NVIDIA_DRIVER_CAPABILITIES=all
       - CUDA_VISIBLE_DEVICES=0
-      - ENABLE_RSTUDIO_SERVICE=1
-      - ENABLE_SSH_SERVICE=1
-      - ENABLE_JUPYTER_SERVICE=1
-      - ENABLE_SHINY_SERVICE=1
+      - ENABLE_USER_DAEMON=0
     init: true
     restart: unless-stopped
     shm_size: '4294967296'
@@ -43,7 +40,8 @@ services:
       - "40087:8787"
       - "40088:8888"
       - "40080:8000"
-    command: vnc_startup.sh
+    command: |
+      bash -c "exec /usr/bin/supervisord -c ~/.local/etc/supervisor/supervisord.conf"
     volumes:
       - /tmp/docker-tmp-ds:/tmp
       - /tmp/nvidia-mps:/tmp/nvidia-mps

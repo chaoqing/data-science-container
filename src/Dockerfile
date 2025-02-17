@@ -11,5 +11,6 @@ ENV HOME="/home/${NB_USER}"
 WORKDIR "${HOME}"
 
 ENTRYPOINT ["/usr/local/bin/container_entrypoint.sh"]
+CMD ["/usr/local/bin/vnc_startup.sh"]
 
 FROM final

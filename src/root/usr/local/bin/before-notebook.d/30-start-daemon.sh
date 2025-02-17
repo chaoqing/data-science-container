@@ -1,5 +1,7 @@
 #!/bin/bash
 
+[ "${ENABLE_USER_DAEMON}" == "1" ] || return 0
+
 # Daemons here should not be run as root
 if [ "$(id -u)" = "0" ]; then
 test -n "${USER_NAME}" || return 0
