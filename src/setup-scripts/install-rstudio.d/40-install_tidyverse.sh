@@ -60,6 +60,15 @@ install2while_missing.r --error --skipmissing --skipinstalled -n "$NCPUS" \
 install2while_missing.r --error --skipmissing --skipinstalled -n "$NCPUS" \
     plotly \
     reticulate \
+    mlr \
+    patchwork \
+    gganimate \
+    ggthemes \
+    ggrepel \
+    ggridges \
+    ggpointdensity \
+    ggpattern \
+    ggfittext \
 
 
 ## a bridge to far? -- brings in another 60 packages

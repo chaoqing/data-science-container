@@ -14,7 +14,7 @@ rm -rf /var/lib/apt/lists/*
 
 install_openbox() {
 apt-get update
-apt-get install -y openbox xterm thunar tint2 feh tilda compton suckless-tools dbus-x11 libdbus-glib-1-2
+apt-get install -y openbox xterm thunar tint2 feh menu x11-xkb-utils numlockx tilda compton suckless-tools dbus-x11 libdbus-glib-1-2
 apt-get purge -y pm-utils *screensaver*
 apt-get clean -y
 

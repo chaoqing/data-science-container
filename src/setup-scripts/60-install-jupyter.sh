@@ -130,17 +130,19 @@ APT+=('python3-patsy')
 APT+=('python3-seaborn')
 
 
-APT+=('python3-bottleneck')
 APT+=('python3-ipywidgets')
 APT+=('python3-sqlalchemy')
 APT+=('python3-statsmodels')
 APT+=('python3-widgetsnbextension')
 APT+=('python3-xlrd')
+APT+=('python3-pyodbc')
 
 PIP=()
 PIP+=('kaleido')
 PIP+=('ipympl')
 PIP+=('bottleneck') # python3-bottleneck may have conflict with pandas so upgrade it with pip
+PIP+=('numexpr') # python3-numexpr may have conflict with pandas so upgrade it with pip
+PIP+=('tables') # python3-tables may have conflict with pandas so upgrade it with pip
 
 EXTRA=()
 EXTRA+=('rainbow-api')

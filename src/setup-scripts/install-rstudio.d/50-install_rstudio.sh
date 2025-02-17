@@ -81,7 +81,10 @@ mkdir -p /etc/R
 ## (and thus is at /usr/local/bin/R), because RStudio doesn't obey
 ## path if a user apt-get installs a package
 R_BIN="$(which R)"
-echo "rsession-which-r=${R_BIN}" >/etc/rstudio/rserver.conf
+cat > /etc/rstudio/rserver.conf <<EOF
+rsession-which-r=${R_BIN}"
+auth-timeout-minutes=0
+EOF
 ## use more robust file locking to avoid errors when using shared volumes:
 echo "lock-type=advisory" >/etc/rstudio/file-locks
 
