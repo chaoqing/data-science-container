@@ -55,6 +55,9 @@ if [ "$UBUNTU_CODENAME" = "noble" ]; then
     UBUNTU_CODENAME="jammy"
 fi
 
+if [ "$(uname -m)" = "aarch64" ] ; then
+wget "https://s3.amazonaws.com/rstudio-ide-build/server/jammy/arm64/rstudio-server-2023.03.0-548-arm64.deb" -O "$DOWNLOAD_FILE"
+else
 if [ "$RSTUDIO_VERSION" = "stable" ] || [ "$RSTUDIO_VERSION" = "preview" ] || [ "$RSTUDIO_VERSION" = "daily" ]; then
     if [ "$UBUNTU_CODENAME" = "bionic" ]; then
         UBUNTU_CODENAME="focal"
@@ -63,6 +66,7 @@ if [ "$RSTUDIO_VERSION" = "stable" ] || [ "$RSTUDIO_VERSION" = "preview" ] || [ 
 else
     wget "https://download2.rstudio.org/server/${UBUNTU_CODENAME}/${ARCH}/rstudio-server-${RSTUDIO_VERSION/"+"/"-"}-${ARCH}.deb" -O "$DOWNLOAD_FILE" ||
         wget "https://s3.amazonaws.com/rstudio-ide-build/server/${UBUNTU_CODENAME}/${ARCH}/rstudio-server-${RSTUDIO_VERSION/"+"/"-"}-${ARCH}.deb" -O "$DOWNLOAD_FILE"
+fi
 fi
 
 gdebi --non-interactive "$DOWNLOAD_FILE"
