@@ -1,8 +1,10 @@
 #!/bin/bash
 
+set -e
+
 PYTHON_VERSION=${PYTHON_VERSION:-default}
 export CONDA_DIR="${CONDA_DIR:-/opt/conda}"
-export MAMBA_ROOT_PREFIX="${CONDA_DIR}"
+export MAMBA_ROOT_PREFIX="${MAMBA_ROOT_PREFIX:-${CONDA_DIR}}"
 
 install_mamba() {
     arch=$(uname -m)
@@ -14,7 +16,8 @@ install_mamba() {
     # https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html#linux-and-macos
     wget --progress=dot:giga -O - "https://micro.mamba.pm/api/micromamba/linux-${arch}/latest" | tar -xvj -C /tmp bin/micromamba
     if [ "${PYTHON_VERSION}" = "default" ]; then
-        PYTHON_SPECIFIER="python"
+	    # Keep the same version of packages as system
+	    PYTHON_SPECIFIER=python=$(python -c 'from sys import version_info as v; print(f"{v.major}.{v.minor}")')
     else
         PYTHON_SPECIFIER="python=${PYTHON_VERSION}"
     fi
@@ -122,12 +125,12 @@ R+=('unixodbc')
 APT=()
 APT+=('python3-pip')
 APT+=('python3-numexpr')
-APT+=('python3-skimage')
+#APT+=('python3-skimage')
 APT+=('python3-h5py')
 APT+=('python3-openpyxl')
 APT+=('python3-altair')
 APT+=('python3-patsy')
-APT+=('python3-seaborn')
+#APT+=('python3-seaborn')
 
 
 APT+=('python3-ipywidgets')
@@ -143,6 +146,8 @@ PIP+=('ipympl')
 PIP+=('bottleneck') # python3-bottleneck may have conflict with pandas so upgrade it with pip
 PIP+=('numexpr') # python3-numexpr may have conflict with pandas so upgrade it with pip
 PIP+=('tables') # python3-tables may have conflict with pandas so upgrade it with pip
+PIP+=('seaborn[stats]')
+PIP+=('scikit-image')
 
 EXTRA=()
 EXTRA+=('rainbow-api')
@@ -199,7 +204,7 @@ configure_python() {
 }
 
 install_packages_with_venv() {
-    ${MAMBA_ROOT_PREFIX}/bin/mamba install --yes $(create_python_packages_list COMMON CONDA JUPYTER R)
+    ${MAMBA_ROOT_PREFIX}/bin/mamba install --yes $(create_python_packages_list COMMON CONDA JUPYTER)
     PYTHON_RUN_PREFIX="${MAMBA_ROOT_PREFIX}/bin/mamba run" install_jupyter_facets
     PYTHON_RUN_PREFIX="${MAMBA_ROOT_PREFIX}/bin/mamba run" configure_python
     ${MAMBA_ROOT_PREFIX}/bin/mamba run pip install --no-cache-dir $(create_python_packages_list PIP "$@")

@@ -32,6 +32,8 @@ apt_install \
     libpng-dev \
     libtiff5-dev \
     libjpeg-dev \
+    libudunits2-dev \
+    libgdal-dev \
     unixodbc-dev
 
 install2.r --error --skipinstalled -n "$NCPUS" \

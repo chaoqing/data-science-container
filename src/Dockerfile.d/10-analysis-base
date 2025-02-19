@@ -38,6 +38,7 @@ RUN echo " ======= Installing Shiny =======" && \
 
 ARG PYTHON_VERSION=default
 ENV CONDA_DIR=/opt/conda
+ENV MAMBA_ROOT_PREFIX=${CONDA_DIR}
 
 # Install all OS dependencies for a fully functional Server
 RUN apt-get update --yes && \

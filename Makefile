@@ -19,7 +19,7 @@ build: generate
 
 test:
 	@echo "$(DOCKER) build --build-arg ROOT_IMAGE=ubuntu:24.04 -t data-science-container:debug --target debug --progress=plain build/"
-	@echo "$(DOCKER) run --rm -it --name test -u 0 -e GRANT_SUDO=1 --security-opt seccomp=unconfined -p 6901:6901 data-science-container:debug vnc_startup.sh"
+	@echo "$(DOCKER) run --rm -it --name test -u 0 -e GRANT_SUDO=1 -e USER_NAME=$$(id -un) --security-opt seccomp=unconfined -p 6901:6901 -e SKIP_ENTRYPOINT=FALSE data-science-container:debug supervisord --nodaemon -c ~/.local/etc/supervisor/supervisord.conf"
 
 clean: FORCE
 	rm -rf build

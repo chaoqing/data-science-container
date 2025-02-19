@@ -41,7 +41,7 @@ services:
       - "40088:8888"
       - "40080:8000"
     command: |
-      bash -c "exec /usr/bin/supervisord -c ~/.local/etc/supervisor/supervisord.conf"
+      bash -c "exec /usr/bin/supervisord -c ~/.local/etc/supervisor/supervisord.conf --nodaemon"
     volumes:
       - /tmp/docker-tmp-ds:/tmp
       - /tmp/nvidia-mps:/tmp/nvidia-mps
