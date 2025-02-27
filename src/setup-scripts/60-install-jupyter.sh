@@ -124,21 +124,21 @@ R+=('unixodbc')
 
 APT=()
 APT+=('python3-pip')
-APT+=('python3-numexpr')
+#APT+=('python3-numexpr')
 #APT+=('python3-skimage')
-APT+=('python3-h5py')
-APT+=('python3-openpyxl')
-APT+=('python3-altair')
-APT+=('python3-patsy')
+#APT+=('python3-h5py')
+#APT+=('python3-openpyxl')
+#APT+=('python3-altair')
+#APT+=('python3-patsy')
 #APT+=('python3-seaborn')
 
 
-APT+=('python3-ipywidgets')
-APT+=('python3-sqlalchemy')
-APT+=('python3-statsmodels')
-APT+=('python3-widgetsnbextension')
-APT+=('python3-xlrd')
-APT+=('python3-pyodbc')
+#APT+=('python3-ipywidgets')
+#APT+=('python3-sqlalchemy')
+#APT+=('python3-statsmodels')
+#APT+=('python3-widgetsnbextension')
+#APT+=('python3-xlrd')
+#APT+=('python3-pyodbc')
 
 PIP=()
 PIP+=('kaleido')
@@ -148,6 +148,8 @@ PIP+=('numexpr') # python3-numexpr may have conflict with pandas so upgrade it w
 PIP+=('tables') # python3-tables may have conflict with pandas so upgrade it with pip
 PIP+=('seaborn[stats]')
 PIP+=('scikit-image')
+PIP+=('jupyterlab')
+PIP+=('nbclassic')
 
 EXTRA=()
 EXTRA+=('rainbow-api')
@@ -226,6 +228,8 @@ install_packages_with_system() {
 }
 
 install_to_seperate_env() {
+    [ "${FORCE_USE_SYSTEM_PYTHON:-0}" = "0" ] || return 1
+
     command -v python3 &> /dev/null || return 0
     python3 -c "import importlib.util; exit(any(importlib.util.find_spec(pkg) is None for pkg in ['pip', 'pandas', 'matplotlib', 'jupyterlab']))" || return 0
 

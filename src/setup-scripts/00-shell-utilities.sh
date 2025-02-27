@@ -30,7 +30,7 @@ do_unminimize() {
     ensure_debian
     ensure_root
 
-    if ! command -v unmimize &> /dev/null; then
+    if ! command -v unminimize &> /dev/null; then
         apt update && apt install -y unminimize
     fi
     yes | unminimize

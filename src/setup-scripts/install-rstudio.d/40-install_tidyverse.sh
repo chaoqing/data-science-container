@@ -5,6 +5,25 @@ set -e
 ## build ARGs
 NCPUS=${NCPUS:--1}
 
+## Retry incase install failed
+function retry() {
+local max_attempts=$1
+local attempt=1
+
+shift
+while [ $attempt -le $max_attempts ]; do
+	"$@" && return 0
+	echo "warning: ${attempt} to run failed: $@"
+	((attempt++))
+done
+
+retrun 1
+}
+
+if [ ${MAX_RETRY_ATTEMPTS:-0} -gt 0 ]; then
+	RETRY="retry ${MAX_RETRY_ATTEMPTS}"
+fi
+
 # a function to install apt packages only if they are not installed
 function apt_install() {
     if ! dpkg -s "$@" >/dev/null 2>&1; then
@@ -45,7 +64,7 @@ install2.r --error --skipinstalled -n "$NCPUS" \
     gert
 
 ## dplyr database backends
-install2while_missing.r --error --skipmissing --skipinstalled -n "$NCPUS" \
+$RETRY install2while_missing.r --error --skipmissing --skipinstalled -n "$NCPUS" \
     arrow \
     dbplyr \
     DBI \
@@ -59,7 +78,7 @@ install2while_missing.r --error --skipmissing --skipinstalled -n "$NCPUS" \
     fst
 
 ## extra packages
-install2while_missing.r --error --skipmissing --skipinstalled -n "$NCPUS" \
+$RETRY install2while_missing.r --error --skipmissing --skipinstalled -n "$NCPUS" \
     plotly \
     reticulate \
     mlr \

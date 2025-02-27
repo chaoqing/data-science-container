@@ -38,11 +38,11 @@ def main():
 
     dockerfile, image_name = create_dockerfile("", dockerfile_dir/"00-os-base")
     dockerfiles.append(dockerfile)
-    if args.desktop != "none":
-        dockerfile, image_name = create_dockerfile(image_name, dockerfile_dir/"05-desktop-base", DESKTOP_TYPE=args.desktop)
-        dockerfiles.append(dockerfile)
     if args.analysis:
         dockerfile, image_name = create_dockerfile(image_name, dockerfile_dir/"10-analysis-base")
+        dockerfiles.append(dockerfile)
+    if args.desktop != "none":
+        dockerfile, image_name = create_dockerfile(image_name, dockerfile_dir/"05-desktop-base", DESKTOP_TYPE=args.desktop)
         dockerfiles.append(dockerfile)
     dockerfile, _ = create_dockerfile(image_name, dockerfile_dir/".."/"Dockerfile")
     dockerfiles.append(dockerfile)

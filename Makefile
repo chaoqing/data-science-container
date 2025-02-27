@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := build
-GENERATE_OPTIONS ?= --desktop xfce4 --analysis
+GENERATE_OPTIONS ?= --desktop openbox --analysis
 FEATURES_OPTIONS ?=
 ifeq ($(FEATURES),full)
 	FEATURES_OPTIONS += --analysis
@@ -15,7 +15,7 @@ define message
 endef
 
 build: generate
-	$(DOCKER) build --build-arg ROOT_IMAGE=ubuntu:24.04 -t data-science-container --target final build/
+	$(DOCKER) build --build-arg HTTP_PROXY=http://192.168.1.3:8123 --build-arg MAX_RETRY_ATTEMPTS=10 --build-arg NCPUS=1 --build-arg EXTRA_TOOL_SETS="NETWORK EXTRA" --build-arg FORCE_USE_SYSTEM_PYTHON=1 --build-arg ROOT_IMAGE=dustynv/pytorch:2.6-r36.4.0-cu128 -t data-science-container:$(shell git rev-parse --short HEAD) --target final build/
 
 test:
 	@echo "$(DOCKER) build --build-arg ROOT_IMAGE=ubuntu:24.04 -t data-science-container:debug --target debug --progress=plain build/"

@@ -4,6 +4,7 @@ ARG R_VERSION=latest
 ARG RSTUDIO_VERSION=stable
 ARG SHINY_SERVER_VERSION=latest
 ARG CRAN=https://cran.r-project.org
+ARG NCPUS=
 
 ENV DEFAULT_USER=${USER_NAME:-${NB_USER:-jovyan}}
 ENV PURGE_BUILDDEPS=false
@@ -20,15 +21,18 @@ RUN echo " ======= Compile R from source =======" && \
     /opt/setup-scripts/install-rstudio.d/20-setup_R.sh && \
     /opt/setup-scripts/install-rstudio.d/30-config_R_cuda.sh
 
+ARG MAX_RETRY_ATTEMPTS=
+ARG HTTP_PROXY=
+ARG HTTPS_PROXY=${HTTP_PROXY}
 RUN echo " ======= Installing Packages =======" && \
     /opt/setup-scripts/install-rstudio.d/40-install_tidyverse.sh
 
 RUN echo " ======= Installing RStudio =======" && \
-    /opt/setup-scripts/install-rstudio.d/50-install_rstudio.sh && \
-    /opt/setup-scripts/install-rstudio.d/60-install_pandoc.sh && \
-    /opt/setup-scripts/install-rstudio.d/70-install_quarto.sh && \
-    /opt/setup-scripts/install-rstudio.d/80-install_verse.sh && \
-    /opt/setup-scripts/install-rstudio.d/90-install_geospatial.sh
+    /opt/setup-scripts/install-rstudio.d/50-install_rstudio.sh
+RUN /opt/setup-scripts/install-rstudio.d/60-install_pandoc.sh
+RUN /opt/setup-scripts/install-rstudio.d/70-install_quarto.sh
+RUN /opt/setup-scripts/install-rstudio.d/80-install_verse.sh
+RUN /opt/setup-scripts/install-rstudio.d/90-install_geospatial.sh
 
 RUN echo " ======= Installing Shiny =======" && \
     test "$(uname -m)" = "aarch64" || \
@@ -37,6 +41,8 @@ RUN echo " ======= Installing Shiny =======" && \
 
 
 ARG PYTHON_VERSION=default
+ARG FORCE_USE_SYSTEM_PYTHON=0
+ARG USE_CONDA_ENV=
 ENV CONDA_DIR=/opt/conda
 ENV MAMBA_ROOT_PREFIX=${CONDA_DIR}
 
