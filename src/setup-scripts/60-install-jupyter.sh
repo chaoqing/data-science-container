@@ -17,7 +17,7 @@ install_mamba() {
     wget --progress=dot:giga -O - "https://micro.mamba.pm/api/micromamba/linux-${arch}/latest" | tar -xvj -C /tmp bin/micromamba
     if [ "${PYTHON_VERSION}" = "default" ]; then
 	    # Keep the same version of packages as system
-	    PYTHON_SPECIFIER=python=$(python -c 'from sys import version_info as v; print(f"{v.major}.{v.minor}")')
+	    PYTHON_SPECIFIER=python=$(python -c 'from sys import version_info as v; print(f"{v.major}.{v.minor}.{v.micro}")')
     else
         PYTHON_SPECIFIER="python=${PYTHON_VERSION}"
     fi
@@ -205,6 +205,42 @@ configure_python() {
 
 }
 
+create_dummy_os_conda_env() {
+    ${MAMBA_ROOT_PREFIX}/bin/mamba create -n os
+    OS_CONDA_PREFIX=$(${MAMBA_ROOT_PREFIX}/bin/mamba env list | awk '$1=="os"{print $NF}')
+    mkdir -p ${OS_CONDA_PREFIX}/etc/conda/activate.d && cat > $_/set_pythonpath.sh <<'EOF'
+#!/bin/bash
+if [ -z "${ORIGINAL_PYTHONPATH:-}" ]; then
+    export ORIGINAL_PYTHONPATH="$PYTHONPATH"
+fi
+if [ "$(id -u)" -gt 0 ]; then
+	export PYTHONPATH=${PYTHONUSERBASE:-$HOME/.local}/lib/python$(python -c 'from sys import version_info as v; print(f"{v.major}.{v.minor}")')/site-packages:$ORIGINAL_PYTHONPATH
+fi
+
+if [ -z "${ORIGINAL_PYTHONUSERBASE:-}" ]; then
+    export ORIGINAL_PYTHONUSERBASE="$PYTHONUSERBASE"
+fi
+if [ -w "$CONDA_PREFIX" ]; then
+	export PYTHONUSERBASE=$CONDA_PREFIX
+fi
+EOF
+
+    mkdir -p ${OS_CONDA_PREFIX}/etc/conda/deactivate.d && cat > $_/unset_pythonpath.sh <<'EOF'
+#!/bin/bash
+unset PYTHONUSERBASE
+if [ -n "${ORIGINAL_PYTHONUSERBASE:-}" ]; then
+	export PYTHONUSERBASE=$ORIGINAL_PYTHONUSERBASE
+fi
+unset ORIGINAL_PYTHONUSERBASE
+
+unset PYTHONPATH
+if [ -n "${ORIGINAL_PYTHONPATH:-}" ]; then
+	export PYTHONPATH=$ORIGINAL_PYTHONPATH
+fi
+unset ORIGINAL_PYTHONPATH
+EOF
+}
+
 install_packages_with_venv() {
     ${MAMBA_ROOT_PREFIX}/bin/mamba install --yes $(create_python_packages_list COMMON CONDA JUPYTER)
     PYTHON_RUN_PREFIX="${MAMBA_ROOT_PREFIX}/bin/mamba run" install_jupyter_facets
@@ -247,6 +283,7 @@ install_env_managers
 if [ "${USE_CONDA_ENV:-0}" = "1" ] || install_to_seperate_env; then
     install_packages_with_venv "$@"
 else
+    create_dummy_os_conda_env
     install_packages_with_system "$@"
 fi
     rm -rf ~/.cache ~/.local/share/virtualenv
